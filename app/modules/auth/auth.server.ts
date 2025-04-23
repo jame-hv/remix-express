@@ -7,7 +7,7 @@ import { Password, User } from "@prisma/client";
 import { safeRedirect } from "remix-utils/safe-redirect";
 import { combineHeaders } from "~/utils/misc";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 export const authenticator = new Authenticator<ProviderUser>();
 

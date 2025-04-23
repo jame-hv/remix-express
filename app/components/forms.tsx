@@ -31,7 +31,7 @@ export const ErrorList = ({
     <ul id={id} className="flex flex-col gap-1">
       {errorsToRender.map((e) => {
         return (
-          <li key={e} className="text-[10px] text-red-500">
+          <li key={e} className="text-sm text-red-500">
             {e}
           </li>
         );
@@ -57,7 +57,7 @@ export const Field = ({
   const errorId = errors?.length ? `${id}-errors` : undefined;
 
   return (
-    <div className={className}>
+    <div className={`${className} flex flex-col gap-2`}>
       <Label htmlFor={id} {...labelProps} />
       <Input
         id={id}
@@ -99,7 +99,6 @@ export const OTPField = ({
         aria-describedby={errorId}
         {...inputProps}
       >
-        // 6 slots for OTP
         <InputOTPGroup>
           <InputOTPSlot index={0} />
           <InputOTPSlot index={1} />

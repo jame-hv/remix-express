@@ -4,10 +4,6 @@ import { sessionKey } from "./auth.server";
 import { safeRedirect } from "remix-utils/safe-redirect";
 import { redirect } from "@remix-run/node";
 
-// const verifiedTimeKey = "verified-time";
-// const unverifiedSessionIdKey = "unverified-session-id";
-// const rememberKey = "remember";
-
 export async function handleNewSession(
   {
     request,
