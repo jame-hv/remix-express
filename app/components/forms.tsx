@@ -178,7 +178,7 @@ export const CheckboxField = ({
 
   return (
     <div className={className}>
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <Checkbox
           {...checkboxProps}
           id={id}
@@ -202,10 +202,10 @@ export const CheckboxField = ({
         <label
           htmlFor={id}
           {...labelProps}
-          className="self-center text-body-xs text-muted-foreground"
+          className="self-center text-sm text-muted-foreground"
         />
       </div>
-      <div className="px-4 pb-3 pt-1">
+      <div className="px-4 pt-1">
         {errorId ? <ErrorList id={errorId} errors={errors} /> : null}
       </div>
     </div>
