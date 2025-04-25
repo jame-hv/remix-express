@@ -10,11 +10,9 @@ import {
 import { z } from "zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { PasswordSchema, UsernameSchema } from "~/modules/auth/validator";
-import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { login, requireAnonymous } from "~/modules/auth/auth.server";
 import { CheckboxField, ErrorList, Field } from "~/components/forms";
 import { Button } from "~/components/ui/button";
-import { checkHoneypot } from "~/modules/auth/honeypot.server";
 import { handleNewSession } from "~/modules/auth/login.server";
 
 // Schema define
@@ -34,9 +32,6 @@ export async function action({ request }: ActionFunctionArgs) {
   await requireAnonymous(request);
   const formData = await request.formData();
 
-  // Check honeypot
-  await checkHoneypot(formData);
-
   const submission = await parseWithZod(formData, {
     schema: (intent) =>
       LoginFormSchema.transform(async (data, context) => {
@@ -52,15 +47,15 @@ export async function action({ request }: ActionFunctionArgs) {
           });
           return z.NEVER;
         }
+        return { ...data, session };
       }),
-
     async: true,
   });
 
   if (submission.status !== "success" || !submission.value?.session) {
     return data(
       { result: submission.reply({ hideFields: ["password"] }) },
-      { status: submission.status === "error" ? 400 : 422 }
+      { status: submission.status === "error" ? 400 : 200 }
     );
   }
 
@@ -74,7 +69,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 }
 
-const LoginPage = () => {
+const LoginRoute = () => {
   const actionData = useActionData<typeof action>();
 
   console.log(actionData);
@@ -99,16 +94,15 @@ const LoginPage = () => {
   return (
     <div className="mx-auto flex h-full w-full max-w-96 flex-col items-center justify-center gap-6">
       <div className="mb-2 flex flex-col gap-2">
-        <h3 className="text-center text-2xl font-medium text-primary">
-          Continue to with our mordern template
-        </h3>
+        <h1 className="text-center text-2xl font-medium text-primary">
+          Welcome to our app !
+        </h1>
         <p className="text-center text-base font-normal text-primary/60">
           Please log in to continue.
         </p>
       </div>
       <div className="mx-auto w-full max-w-md px-8">
         <Form method="POST" {...getFormProps(form)}>
-          <HoneypotInputs />
           <Field
             labelProps={{ children: "Username" }}
             inputProps={{
@@ -130,7 +124,7 @@ const LoginPage = () => {
             errors={fields.password.errors}
           />
 
-          <div className="flex justify-between">
+          <div className="flex-col justify-between ">
             <CheckboxField
               labelProps={{
                 htmlFor: fields.remember.id,
@@ -141,12 +135,13 @@ const LoginPage = () => {
               })}
               errors={fields.remember.errors}
             />
-            <div>
+
+            <div className="">
               <Link
-                to="/forgot-password"
-                className="text-body-xs font-semibold"
+                to="/register"
+                className="text-sm underline hover:text-blue-500"
               >
-                Forgot password?
+                Not a member? Sign up
               </Link>
             </div>
           </div>
@@ -182,4 +177,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginRoute;
